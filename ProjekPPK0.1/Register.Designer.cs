@@ -55,6 +55,7 @@
             this.label5.Size = new System.Drawing.Size(103, 13);
             this.label5.TabIndex = 34;
             this.label5.Text = "Back To Login Form";
+            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // button1
             // 
@@ -66,6 +67,7 @@
             this.button1.TabIndex = 33;
             this.button1.Text = "Submit";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // textBox4
             // 
@@ -227,6 +229,7 @@
             this.Controls.Add(this.label1);
             this.Name = "Register";
             this.Text = "Register";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Register_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
