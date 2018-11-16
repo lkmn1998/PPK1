@@ -21,6 +21,8 @@ namespace ProjekPPK0._1
         String server = "127.0.0.1";
         String connString;
         int i;
+        String id;
+        String isAdmin;
         private void InitConnection()
         {
             try
@@ -33,7 +35,7 @@ namespace ProjekPPK0._1
                              "SslMode=none";
                 conn.ConnectionString = connString;
                 conn.Open();
-                MessageBox.Show("Connection Success");
+                //MessageBox.Show("Connection Success");
             }
             catch (MySqlException e)
             {
@@ -50,6 +52,14 @@ namespace ProjekPPK0._1
             InitializeComponent();
             InitConnection();
             conn.Open();
+            makeItPassword();
+        }
+
+        private void makeItPassword()
+        {
+            textBox5.Text = "";
+            // The password character is an asterisk.  
+            textBox5.PasswordChar = '*';
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -57,24 +67,38 @@ namespace ProjekPPK0._1
             try
             {
                 i = 0;
-                //ini salah sqlnya
+                //Login
                 String sql = "select * from daftar where username= '" + textBox6.Text + "' and password='" + textBox5.Text + "'";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 DataTable dt = new DataTable();
                 dt.Load(cmd.ExecuteReader());
                 i = Convert.ToInt32(dt.Rows.Count.ToString());
-                conn.Close();
                 if (i == 0)
                 {
                     label2.Text = "You have entered wrong username or password";
                 }
                 else if (i == 1)
                 {
-                    this.Hide();
-                    User user = new User();
-                    user.Show();
-                    MessageBox.Show("Welcome");
-                    //warning : kalo sudah ganti form ke form user programnya akan terus berjalan walaupun diclose
+                    MySqlDataReader dr = cmd.ExecuteReader();
+                    dr.Read();
+                    id = dr["idDaftar"].ToString();
+                    isAdmin = dr["isAdmin"].ToString();
+                    //MessageBox.Show(isAdmin);
+                    //int isAdmin2 = Convert.ToInt32(isAdmin);
+                    if (isAdmin.Equals("True"))
+                    {
+                        conn.Close();
+                        this.Hide();
+                        Admin admin = new Admin(id);
+                        admin.Show();
+                    }
+                    else
+                    {
+                        conn.Close();
+                        this.Hide();
+                        User user = new User(id);
+                        user.Show();
+                    }
                 }
             }
             catch (MySqlException ex)
@@ -93,7 +117,7 @@ namespace ProjekPPK0._1
             
         }
 
-        private void Login_FormClosing(object sender, FormClosingEventArgs e)
+        private void label1_Click(object sender, EventArgs e)
         {
             if (System.Windows.Forms.Application.MessageLoop)
             {

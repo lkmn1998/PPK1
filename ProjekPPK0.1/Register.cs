@@ -48,6 +48,14 @@ namespace ProjekPPK0._1
             InitializeComponent();
             InitConnection();
             conn.Open();
+            makeItPassword();
+        }
+
+        private void makeItPassword()
+        {
+            textBox5.Text = "";
+            // The password character is an asterisk.  
+            textBox5.PasswordChar = '*';
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -56,7 +64,7 @@ namespace ProjekPPK0._1
             {
                 int i = 0;
                 //ini salah sqlnya
-                String sql = "select * from daftar where username= '" + textBox6.Text + "'";
+                String sql = "select * from daftar where username= '" + textBox6.Text + "' or email = '"+textBox4.Text+"'";
                 String sql2 = "insert into daftar (firstName, lastName, umur, nomorTelepon, username, password, email) values ('" + textBox1.Text + "', '" + textBox2.Text + "', '" + textBox3.Text + "', '" + textBox7.Text + "', '" + textBox6.Text + "', '" + textBox5.Text + "', '" + textBox4.Text + "')";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 DataTable dt = new DataTable();
@@ -64,8 +72,7 @@ namespace ProjekPPK0._1
                 i = Convert.ToInt32(dt.Rows.Count.ToString());
                 if (i > 0)
                 {
-                    conn.Close();
-                    MessageBox.Show("Username has been used");
+                    label3.Text = "Username or email has been used";
                 }
                 else
                 {
@@ -73,6 +80,7 @@ namespace ProjekPPK0._1
                     DataTable dt2 = new DataTable();
                     cmd2.ExecuteNonQuery();
                     conn.Close();
+                    MessageBox.Show("Registration success");
                     this.Hide();
                     Login login = new Login();
                     login.Show();
@@ -93,9 +101,9 @@ namespace ProjekPPK0._1
             login.Show();
         }
 
-        private void Register_FormClosing(object sender, FormClosingEventArgs e)
+        private void label2_Click(object sender, EventArgs e)
         {
-            if(System.Windows.Forms.Application.MessageLoop)
+            if (System.Windows.Forms.Application.MessageLoop)
             {
                 // Use this since we are a WinForms app
                 System.Windows.Forms.Application.Exit();
